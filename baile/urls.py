@@ -16,12 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .routers import router
+from django.conf.urls.static import static
+from django.conf import settings
+from users import views as users_view
 from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('bailarina', TemplateView.as_view(template_name='indexBailarina.html')),
-    path('teatro', TemplateView.as_view(template_name='indexTeatro.html'))
+    path('teatro', TemplateView.as_view(template_name='indexTeatro.html')),
+    path('users/login',users_view.login_view, name='login')
 
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

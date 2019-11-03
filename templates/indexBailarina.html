@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+ <meta charset="utf-8">
+ <title>Table Dance</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <meta name="description" content="A simple crud app made with the vue js and django">
+<meta name="keywords" content="Table Dance">
+ <!-- bootstap -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+ <!-- boostrap css -->
+
+
+
+
+
+
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-sm bg-dark navbar-dark" >
+      <ul class="navbar-nav" >
+        <li class="nav-item active">
+          <a class="nav-link" href="/bailarina">Bailarinas</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/teatro">Teatros</a>
+        </li>
+      </ul>
+  </nav>
+  
+
+		<div id="starting">
+
+				<div class="container"> 
+				 <div class="row"> 
+				   <h1> Bailarinas
+				   <button class = "btn btn-success" data-toggle="modal" data-target="#addBailarinaModal"> Agregar bailarina </button> 
+				   </h1> 
+				   <table class = "table"> 
+					 <thead> 
+					   <tr> 
+						  
+						 <th scope="col"> Nombre </th> 
+						 <th scope="col "> Apellido </th> 
+						 <th scope="col "> Fecha de nacimiento </th> 
+						 <th scope="col "> Descripción </th> 
+					   </tr> 
+					 </thead> 
+					 <tbody> 
+					   <tr v-for ="bailarina in bailarinas"> 
+						<!--  <th scope =" row ">${bailarina.id} </th>  -->
+						 <td>${bailarina.nombre}</td>
+						 <td>${bailarina.apellido}</td>
+						 <td>${bailarina.fecha_nacimiento}</td>
+						 <td>${bailarina.descripcion}</td>
+						 <td> 
+						   <button class = "btn btn-info" v-on:click="getBailarina(bailarina.id)"> Editar </button> 
+						   <button class = "btn btn-danger" v-on:click="deleteBailarina(bailarina.id)"> Eliminar </button> 
+						 </td> 
+					   </tr> 
+					 </tbody> 
+				   </table> 
+
+				   <!-- Add Article Modal -->
+          <div class="modal fade" id="addBailarinaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Añadir bailarina</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form v-on:submit.prevent="addBailarina()">
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label >Nombre</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        placeholder="Ingrese nombre"
+                        v-model="newBailarina.nombre"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Apellido</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="apellido"
+                        placeholder="Ingrese apellido"
+                        v-model="newBailarina.apellido"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Fecha de nacimiento</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="fecha_nacimiento"
+                        placeholder="Ingrese fecha de nacimiento"
+                        v-model="newBailarina.fecha_nacimiento"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Descripción</label>
+                      <textarea
+                        class="form-control"
+                        id="descripcion"
+                        placeholder="Ingrese la descripcion"
+                        v-model="newBailarina.descripcion"
+                        required="required"
+                        rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary" >Guardar</button>
+                </div>
+                </form>
+              </div>
+            </div>
+           <div class="loading" v-if="loading===true">cargando&#8230;</div>          
+          </div>
+          <!-- End of article modal -->
+
+
+
+          <!-- Edit Article Modal -->
+          <div class="modal fade" id="editarBailarinaModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Editar bailarina</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form v-on:submit.prevent="updatedBailarina()">
+                <div class="modal-body">
+                    <div class="form-group">
+                      <label >Nombre</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="nombre"
+                        placeholder="Ingrese nombre"
+                        v-model="currentBailarina.nombre"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Apellido</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="apellido"
+                        placeholder="Ingrese apellido"
+                        v-model="currentBailarina.apellido"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Fecha de nacimiento</label>
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="fecha_nacimiento"
+                        placeholder="Ingrese fecha de nacimiento"
+                        v-model="currentBailarina.fecha_nacimiento"
+                        required="required" >
+                    </div>
+                    <div class="form-group">
+                      <label >Descripción</label>
+                      <textarea
+                        class="form-control"
+                        id="descripcion"
+                        placeholder="Ingrese la descripcion"
+                        v-model="currentBailarina.descripcion"
+                        required="required"
+                        rows="4"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+                </form>
+              </div>
+            </div>
+            <div class="loading" v-if="loading===true">Cargando&#8230;</div>
+          </div>
+          <!-- End of edit article modal -->
+
+
+
+
+
+
+				 </div> 
+			   </div> 
+			   <div class ="loading" v-if ="loading === true"> Trabajando & # 8230; </div> 
+		</div>
+
+
+
+
+
+
+
+
+
+<!-- bootrtap js files -->
+ <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+ <!-- vue.js files -->
+ <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.5"></script>
+</body>
+</html>
+
+<script type="text/javascript">
+	Vue.http.headers.common['X-CSRFToken'] = "{{ csrf_token }}";
+	 new Vue({
+	   el: '#starting',
+	   delimiters: ['${','}'],
+	   data: {
+	   bailarinas: [],
+	   loading: true,
+	   currentBailarina: {},
+	   message: null,
+	   newBailarina: { 'nombre': null, 'apellido': null,'descripcion':null,'fecha_nacimiento':null },
+	 },
+	 mounted: function() {
+		this.getBailarinas();
+	},
+	 methods: {
+		getBailarinas: function() {
+			this.loading = true;
+			this.$http.get('/api/bailarina/')
+				.then((response) => {
+					this.bailarinas = response.data;
+					console.log(response.data);
+					this.loading = false;
+				})
+				.catch((err) => {
+					this.loading = false;
+					console.log(err);
+				})
+		},
+		getBailarina: function(id) {
+			this.loading = true;
+			this.$http.get(`/api/bailarina/${id}/`)
+				.then((response)=>{
+					this.currentBailarina = response.data;
+					$("#editarBailarinaModal").modal('show');
+					this.loading = false;
+				})
+				.catch((err) => {
+					this.loading = false;
+					console.log(err);
+				})
+			
+		},
+		addBailarina: function(){
+			this.loading=true;
+			this.$http.post('/api/bailarina/',this.newBailarina)
+			.then((response) => {
+			this.loading = false;
+			this.getBailarinas();
+			})
+			.catch((err) => {
+			this.loading = false;
+			console.log(err);
+			})
+		},
+		updatedBailarina: function() {
+			this.loadinng = true;
+			this.$http.put(`/api/bailarina/${this.currentBailarina.id}/`,   this.currentBailarina)
+				.then((response) => {
+				this.loading = false;
+				this.currentBailarina = response.data;
+				this.getBailarinas();
+			})
+			.catch((err) => {
+				this.loading = false;
+				console.log(err);
+			})
+		},
+		deleteBailarina: function(id) {
+			this.loading = true;
+			this.$http.delete(`/api/bailarina/${id}/` )
+				.then((response) => {
+				this.loading = false;
+				this.getBailarinas();
+			})
+			.catch((err) => {
+				this.loading = false;
+				console.log(err);
+			})
+		}
+		
+		}
+	 });
+ </script>
