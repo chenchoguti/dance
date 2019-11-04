@@ -30,9 +30,6 @@
           <a class="nav-link" href="/nacionalidad">Nacionalidades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/users/signup">Crear usuario</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" href="/users/logout">Cerrar sesion</a>
         </li>
       </ul>
@@ -45,7 +42,7 @@
 				 <div class="row"> 
 				   <h1> Bailarinas
            
-				   <button class = "btn btn-success" data-toggle="modal" data-target="#addBailarinaModal"> Agregar bailarina </button> 
+				   <button class = "btn btn-success" data-toggle="modal" data-target="#addBailarinaModal"> Agregar nacionalidad </button> 
             
 				   </h1> 
 				   <table class = "table"> 
@@ -53,23 +50,17 @@
 					   <tr> 
 						  
 						 <th scope="col"> Nombre </th> 
-						 <th scope="col "> Apellido </th> 
-						 <th scope="col "> Fecha de nacimiento </th> 
-						 <th scope="col "> Descripción </th> 
-             <th scope="col "> Nacionalidad </th> 
+						 
 					   </tr> 
 					 </thead> 
 					 <tbody> 
-					   <tr v-for ="bailarina in bailarinas"> 
+					   <tr v-for ="nacionalidad in nacionalidades"> 
 						<!--  <th scope =" row ">${bailarina.id} </th>  -->
-						 <td>${bailarina.nombre}</td>
-						 <td>${bailarina.apellido}</td>
-						 <td>${bailarina.fecha_nacimiento}</td>
-						 <td>${bailarina.descripcion}</td>
-             <td>${bailarina.nacionalidad}</td>
+						 <td>${nacionalidad.nombre}</td>
+						
 						 <td> 
-						   <button class = "btn btn-info" v-on:click="getBailarina(bailarina.id)"> Editar </button> 
-						   <button class = "btn btn-danger" v-on:click="deleteBailarina(bailarina.id)"> Eliminar </button> 
+						   <button class = "btn btn-info" v-on:click="getNacionalidad(nacionalidad.id)"> Editar </button> 
+						   <button class = "btn btn-danger" v-on:click="deleteNacionalidades(nacionalidad.id)"> Eliminar </button> 
 						 </td> 
 					   </tr> 
 					 </tbody> 
@@ -80,12 +71,12 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Añadir bailarina</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">Añadir Nacionalidad</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="addBailarina()">
+                <form v-on:submit.prevent="addNacionalidad()">
                 <div class="modal-body">
                     <div class="form-group">
                       <label >Nombre</label>
@@ -94,45 +85,10 @@
                         class="form-control"
                         id="nombre"
                         placeholder="Ingrese nombre"
-                        v-model="newBailarina.nombre"
+                        v-model="newNacionalidad.nombre"
                         required="required" >
                     </div>
-                    <div class="form-group">
-                      <label >Apellido</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="apellido"
-                        placeholder="Ingrese apellido"
-                        v-model="newBailarina.apellido"
-                        required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label >Fecha de nacimiento</label>
-                      <input
-                        type="date"
-                        class="form-control"
-                        id="fecha_nacimiento"
-                        placeholder="Ingrese fecha de nacimiento"
-                        v-model="newBailarina.fecha_nacimiento"
-                        required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label >Descripción</label>
-                      <textarea
-                        class="form-control"
-                        id="descripcion"
-                        placeholder="Ingrese la descripcion"
-                        v-model="newBailarina.descripcion"
-                        required="required"
-                        rows="4"></textarea>
-                    </div>
-                    <div class="form-group"><label for="usuario">Nacionalidades</label>                       
-                      <select v-model="newBailarina.nacionalidad">                         
-                        <option value="0" disabled>Seleccione</option>                        
-                        <option v-for="nacionalidad in nacionalidades" :key="nacionalidad.id" :value="nacionalidad.id" v-text="nacionalidad.nombre"></option>                      
-                      </select>                   
-                    </div>
+                   
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -152,12 +108,12 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Editar bailarina</h5>
+                  <h5 class="modal-title" id="exampleModalLongTitle">Editar nacionalidad</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <form v-on:submit.prevent="updatedBailarina()">
+                <form v-on:submit.prevent="updatedNacionalidad()">
                 <div class="modal-body">
                     <div class="form-group">
                       <label >Nombre</label>
@@ -166,45 +122,10 @@
                         class="form-control"
                         id="nombre"
                         placeholder="Ingrese nombre"
-                        v-model="currentBailarina.nombre"
+                        v-model="currentNacionalidad.nombre"
                         required="required" >
                     </div>
-                    <div class="form-group">
-                      <label >Apellido</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="apellido"
-                        placeholder="Ingrese apellido"
-                        v-model="currentBailarina.apellido"
-                        required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label >Fecha de nacimiento</label>
-                      <input
-                        type="date"
-                        class="form-control"
-                        id="fecha_nacimiento"
-                        placeholder="Ingrese fecha de nacimiento"
-                        v-model="currentBailarina.fecha_nacimiento"
-                        required="required" >
-                    </div>
-                    <div class="form-group">
-                      <label >Descripción</label>
-                      <textarea
-                        class="form-control"
-                        id="descripcion"
-                        placeholder="Ingrese la descripcion"
-                        v-model="currentBailarina.descripcion"
-                        required="required"
-                        rows="4"></textarea>
-                    </div>
-                    <div class="form-group"><label for="usuario">Nacionalidades</label>                       
-                      <select v-model="currentBailarina.nacionalidad">                         
-                        <option value="0" disabled>Seleccione</option>                        
-                        <option v-for="nacionalidad in nacionalidades" :key="nacionalidad.id" :value="nacionalidad.id" v-text="nacionalidad.nombre"></option>                      
-                      </select>                   
-                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary m-progress" data-dismiss="modal">Cerrar</button>
@@ -255,23 +176,21 @@
 	   el: '#starting',
 	   delimiters: ['${','}'],
 	   data: {
-	   bailarinas: [],
-     nacionalidades: [],
+	   nacionalidades: [],
 	   loading: true,
-	   currentBailarina: {},
+	   currentNacionalidad: {},
 	   message: null,
-	   newBailarina: { 'nombre': null, 'apellido': null,'descripcion':null,'fecha_nacimiento':null, 'nacionalidad':null },
+	   newNacionalidad: { 'nombre': null },
 	 },
 	 mounted: function() {
-		this.getBailarinas();
-    this.getNacionalidades();
+		this.getNacionalidades();
 	},
 	 methods: {
-		getBailarinas: function() {
+		getNacionalidades: function() {
 			this.loading = true;
-			this.$http.get('/api/bailarina/')
+			this.$http.get('/api/nacionalidad/')
 				.then((response) => {
-					this.bailarinas = response.data;
+					this.nacionalidades = response.data;
 					console.log(response.data);
 					this.loading = false;
 				})
@@ -280,24 +199,11 @@
 					console.log(err);
 				})
 		},
-    getNacionalidades: function() {
-      this.loading = true;
-      this.$http.get('/api/nacionalidad/')
-        .then((response) => {
-          this.nacionalidades = response.data;
-          console.log(response.data);
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-          console.log(err);
-        })
-    },
-		getBailarina: function(id) {
+		getNacionalidad: function(id) {
 			this.loading = true;
-			this.$http.get(`/api/bailarina/${id}/`)
+			this.$http.get(`/api/nacionalidad/${id}/`)
 				.then((response)=>{
-					this.currentBailarina = response.data;
+					this.currentNacionalidad = response.data;
 					$("#editarBailarinaModal").modal('show');
 					this.loading = false;
 				})
@@ -307,38 +213,37 @@
 				})
 			
 		},
-
-		addBailarina: function(){
+		addNacionalidad: function(){
 			this.loading=true;
-			this.$http.post('/api/bailarina/',this.newBailarina)
+			this.$http.post('/api/nacionalidad/',this.newNacionalidad)
 			.then((response) => {
 			this.loading = false;
-			this.getBailarinas();
+			this.getNacionalidades();
 			})
 			.catch((err) => {
 			this.loading = false;
 			console.log(err);
 			})
 		},
-		updatedBailarina: function() {
+		updatedNacionalidad: function() {
 			this.loadinng = true;
-			this.$http.put(`/api/bailarina/${this.currentBailarina.id}/`,   this.currentBailarina)
+			this.$http.put(`/api/nacionalidad/${this.currentNacionalidad.id}/`,   this.currentNacionalidad)
 				.then((response) => {
 				this.loading = false;
-				this.currentBailarina = response.data;
-				this.getBailarinas();
+				this.currentNacionalidad = response.data;
+				this.getNacionalidades();
 			})
 			.catch((err) => {
 				this.loading = false;
 				console.log(err);
 			})
 		},
-		deleteBailarina: function(id) {
+		deleteNacionalidades: function(id) {
 			this.loading = true;
-			this.$http.delete(`/api/bailarina/${id}/` )
+			this.$http.delete(`/api/nacionalidad/${id}/` )
 				.then((response) => {
 				this.loading = false;
-				this.getBailarinas();
+				this.getNacionalidades();
 			})
 			.catch((err) => {
 				this.loading = false;

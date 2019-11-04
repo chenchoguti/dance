@@ -25,7 +25,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('bailarina', TemplateView.as_view(template_name='indexBailarina.html')),
+    path('nacionalidad', TemplateView.as_view(template_name='indexNacionalidad.html')),
     path('teatro', TemplateView.as_view(template_name='indexTeatro.html')),
-    path('users/login',users_view.login_view, name='login')
+    path('',users_view.login_view, name='login'),
+    path('users/logout',users_view.logout_view, name='logout'),
+    path('users/signup',users_view.signup,name='signup')
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

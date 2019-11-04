@@ -2,7 +2,14 @@ from django.db import models
 from django.contrib import admin
 from django.utils import timezone
 
+class Nacionalidad(models.Model):
+	nombre = models.CharField(max_length=60)
+
+	def __str__(self):
+		return self.nombre
+
 class Bailarina(models.Model):
+	nacionalidad = models.ForeignKey(Nacionalidad,on_delete=models.CASCADE)
 	nombre = models.CharField(max_length=60)
 	apellido = models.CharField(max_length=60)
 	descripcion = models.TextField()
@@ -39,3 +46,4 @@ class BailarinaAdmin(admin.ModelAdmin):
 class TeatroAdmin(admin.ModelAdmin):
 	inlines = (ShowInLine,)
 	
+
